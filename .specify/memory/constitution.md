@@ -1,50 +1,96 @@
-# [PROJECT_NAME] Constitution
-<!-- Example: Spec Constitution, TaskFlow Constitution, etc. -->
+<!--
+Sync Impact Report
+- Version change: N/A (template) → 1.0.0
+- Modified principles: N/A → I. Elderly-First Usability; N/A → II. 2000s Office-Tool Familiarity;
+  N/A → III. Trust & Safety Transparency; N/A → IV. Output Reliability; N/A → V. Consistency &
+  Previewability
+- Added sections: Product Requirements, Development Workflow & Quality Gates
+- Removed sections: None
+- Templates requiring updates:
+  - ✅ .specify/templates/plan-template.md
+  - ✅ .specify/templates/spec-template.md
+  - ✅ .specify/templates/tasks-template.md
+- Follow-up TODOs: TODO(RATIFICATION_DATE) in Governance
+-->
+# LetterWorks Constitution
 
 ## Core Principles
 
-### [PRINCIPLE_1_NAME]
-<!-- Example: I. Library-First -->
-[PRINCIPLE_1_DESCRIPTION]
-<!-- Example: Every feature starts as a standalone library; Libraries must be self-contained, independently testable, documented; Clear purpose required - no organizational-only libraries -->
+### I. Elderly-First Usability
+LetterWorks MUST prioritize older adults by default.
+- Default body text MUST be large and user-adjustable (minimum 16px-equivalent).
+- Primary actions MUST use explicit verb labels; no icon-only primary actions.
+- Flows MUST minimize cognitive load: one decision per screen, clear step titles,
+  and no reliance on short-term memory.
+- Error messages MUST be plain language and include a next action.
+Rationale: The product succeeds only if older adults can complete tasks confidently
+without strain or confusion.
 
-### [PRINCIPLE_2_NAME]
-<!-- Example: II. CLI Interface -->
-[PRINCIPLE_2_DESCRIPTION]
-<!-- Example: Every library exposes functionality via CLI; Text in/out protocol: stdin/args → stdout, errors → stderr; Support JSON + human-readable formats -->
+### II. 2000s Office-Tool Familiarity
+Interactions MUST feel like a classic desktop office tool.
+- Multi-step tasks MUST use wizard flows with Back/Next/Cancel and a visible
+  progress indicator.
+- Primary actions MUST be explicit buttons; no hidden gestures or implicit actions.
+- Menus/toolbars MUST expose key functions with familiar labels (e.g., File, Edit,
+  Help).
+Rationale: Familiar patterns reduce learning time and improve confidence.
 
-### [PRINCIPLE_3_NAME]
-<!-- Example: III. Test-First (NON-NEGOTIABLE) -->
-[PRINCIPLE_3_DESCRIPTION]
-<!-- Example: TDD mandatory: Tests written → User approved → Tests fail → Then implement; Red-Green-Refactor cycle strictly enforced -->
+### III. Trust & Safety Transparency
+LetterWorks MUST be transparent and safe by default.
+- UI copy MUST NOT use “AI” branding or imply autonomous behavior.
+- The system MUST NOT fabricate facts; uncertainty MUST be stated with a prompt
+  for user input.
+- All automated edits MUST be visible in preview; no hidden background changes.
+- Privacy messaging MUST be concise and explicit about data use; external sharing
+  MUST require clear user confirmation.
+Rationale: Users must trust that the product is honest, predictable, and safe.
 
-### [PRINCIPLE_4_NAME]
-<!-- Example: IV. Integration Testing -->
-[PRINCIPLE_4_DESCRIPTION]
-<!-- Example: Focus areas requiring integration tests: New library contract tests, Contract changes, Inter-service communication, Shared schemas -->
+### IV. Output Reliability
+Every flow MUST end with a reliable output path.
+- Each flow MUST offer at least one of: Print, PDF, Copy, or Email.
+- If one output channel fails, at least one alternative MUST remain available.
+- Previewed content MUST match final output exactly.
+- Users MUST receive clear confirmation of successful output and where it went.
+Rationale: The product’s value is only realized when users can deliver the result.
 
-### [PRINCIPLE_5_NAME]
-<!-- Example: V. Observability, VI. Versioning & Breaking Changes, VII. Simplicity -->
-[PRINCIPLE_5_DESCRIPTION]
-<!-- Example: Text I/O ensures debuggability; Structured logging required; Or: MAJOR.MINOR.BUILD format; Or: Start simple, YAGNI principles -->
+### V. Consistency & Previewability
+Templates and controls MUST behave consistently across the product.
+- All templates MUST share a common structure: header, recipient, body, closing,
+  signature.
+- Tone controls MUST be limited to a small, named set with predictable effects.
+- Any change MUST be previewable before commit and undoable after commit.
+- Labels, layout, and terminology MUST remain consistent across templates.
+Rationale: Consistency reduces errors and builds user confidence.
 
-## [SECTION_2_NAME]
-<!-- Example: Additional Constraints, Security Requirements, Performance Standards, etc. -->
+## Product Requirements
 
-[SECTION_2_CONTENT]
-<!-- Example: Technology stack requirements, compliance standards, deployment policies, etc. -->
+- Accessibility is a hard requirement: keyboard navigation, high contrast,
+  and no time-limited interactions without clear extensions.
+- All instructional text MUST be concise, plain-language, and scannable.
+- No data leaves the device or account without explicit user confirmation.
+- Exported content MUST be stored/located in a user-understandable location
+  (e.g., Downloads, Sent folder).
 
-## [SECTION_3_NAME]
-<!-- Example: Development Workflow, Review Process, Quality Gates, etc. -->
+## Development Workflow & Quality Gates
 
-[SECTION_3_CONTENT]
-<!-- Example: Code review requirements, testing gates, deployment approval process, etc. -->
+- Every spec and plan MUST include a Constitution Check with explicit evidence
+  for each principle.
+- UX review MUST verify elderly-first readability and cognitive load.
+- Trust & safety review MUST verify no “AI” branding, no hidden behavior, and
+  clear privacy messaging.
+- Output reliability MUST be tested for every flow with Print/PDF/Copy/Email
+  coverage.
+- Consistency review MUST verify shared template structure and preview/undo
+  behavior.
 
 ## Governance
-<!-- Example: Constitution supersedes all other practices; Amendments require documentation, approval, migration plan -->
 
-[GOVERNANCE_RULES]
-<!-- Example: All PRs/reviews must verify compliance; Complexity must be justified; Use [GUIDANCE_FILE] for runtime development guidance -->
+- This Constitution supersedes all other practices.
+- Amendments require a written proposal, rationale, migration plan, and approval
+  from project maintainers.
+- Versioning follows semantic rules: MAJOR for principle changes/removals, MINOR
+  for new principles or material additions, PATCH for clarifications.
+- Compliance is required for every spec, plan, and PR; violations must be fixed
+	or explicitly waived with documented justification.
 
-**Version**: [CONSTITUTION_VERSION] | **Ratified**: [RATIFICATION_DATE] | **Last Amended**: [LAST_AMENDED_DATE]
-<!-- Example: Version: 2.1.1 | Ratified: 2025-06-13 | Last Amended: 2025-07-16 -->
+**Version**: 1.0.0 | **Ratified**: TODO(RATIFICATION_DATE): original adoption date not recorded | **Last Amended**: 2026-01-22

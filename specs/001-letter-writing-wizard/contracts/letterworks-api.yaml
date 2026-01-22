@@ -1,0 +1,390 @@
+openapi: 3.0.3
+info:
+  title: LetterWorks API
+  version: 1.0.0
+  description: API for templates, drafts, versions, previews, and outputs.
+servers:
+  - url: /api
+paths:
+  /templates:
+    get:
+      summary: List templates
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Template"
+  /templates/{templateId}:
+    get:
+      summary: Get template by id
+      parameters:
+        - name: templateId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Template"
+        "404":
+          description: Not found
+  /wizard-sessions:
+    post:
+      summary: Create a wizard session
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/WizardSessionCreate"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/WizardSession"
+  /wizard-sessions/{sessionId}:
+    patch:
+      summary: Update wizard session progress and data
+      parameters:
+        - name: sessionId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/WizardSessionUpdate"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/WizardSession"
+        "404":
+          description: Not found
+  /wizard-sessions/{sessionId}/preview:
+    post:
+      summary: Generate preview from wizard session
+      parameters:
+        - name: sessionId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ToneRequest"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PreviewResponse"
+  /drafts:
+    post:
+      summary: Create a draft from wizard data
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/DraftCreate"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Draft"
+    get:
+      summary: List drafts
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Draft"
+  /drafts/{draftId}:
+    get:
+      summary: Get draft by id
+      parameters:
+        - name: draftId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Draft"
+        "404":
+          description: Not found
+    patch:
+      summary: Update draft data or tone settings
+      parameters:
+        - name: draftId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/DraftUpdate"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Draft"
+  /drafts/{draftId}/preview:
+    post:
+      summary: Regenerate preview for a draft
+      parameters:
+        - name: draftId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ToneRequest"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PreviewResponse"
+  /drafts/{draftId}/versions:
+    post:
+      summary: Create a draft version snapshot
+      parameters:
+        - name: draftId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DraftVersion"
+    get:
+      summary: List draft versions
+      parameters:
+        - name: draftId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/DraftVersion"
+  /drafts/{draftId}/outputs:
+    post:
+      summary: Request output (print/pdf/copy/email)
+      parameters:
+        - name: draftId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/OutputRequest"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OutputResponse"
+components:
+  schemas:
+    Template:
+      type: object
+      properties:
+        id: { type: string }
+        name: { type: string }
+        category: { type: string }
+        description: { type: string }
+        requiredFields:
+          type: array
+          items: { $ref: "#/components/schemas/FieldDescriptor" }
+        optionalFields:
+          type: array
+          items: { $ref: "#/components/schemas/FieldDescriptor" }
+        structure:
+          type: object
+          properties:
+            header: { type: string }
+            recipient: { type: string }
+            body: { type: string }
+            closing: { type: string }
+            signature: { type: string }
+      required: [id, name, requiredFields, structure]
+    FieldDescriptor:
+      type: object
+      properties:
+        id: { type: string }
+        label: { type: string }
+        type:
+          type: string
+          enum: [text, textarea, date, number, email, phone]
+        required: { type: boolean }
+        validation:
+          type: object
+          properties:
+            minLength: { type: integer }
+            maxLength: { type: integer }
+            pattern: { type: string }
+      required: [id, label, type, required]
+    WizardSessionCreate:
+      type: object
+      properties:
+        templateId: { type: string }
+      required: [templateId]
+    WizardSessionUpdate:
+      type: object
+      properties:
+        currentStep: { type: integer }
+        data:
+          type: object
+          additionalProperties: true
+        status:
+          type: string
+          enum: [in_progress, completed]
+    WizardSession:
+      type: object
+      properties:
+        id: { type: string }
+        templateId: { type: string }
+        currentStep: { type: integer }
+        data:
+          type: object
+          additionalProperties: true
+        status:
+          type: string
+          enum: [in_progress, completed]
+      required: [id, templateId, currentStep, status]
+    ToneRequest:
+      type: object
+      properties:
+        tone:
+          type: string
+          enum: [more_polite, more_firm, make_shorter, fix_spelling, none]
+    PreviewResponse:
+      type: object
+      properties:
+        previewText: { type: string }
+      required: [previewText]
+    DraftCreate:
+      type: object
+      properties:
+        templateId: { type: string }
+        title: { type: string }
+        data:
+          type: object
+          additionalProperties: true
+        toneSettings:
+          type: object
+          additionalProperties: true
+      required: [templateId, title]
+    DraftUpdate:
+      type: object
+      properties:
+        title: { type: string }
+        data:
+          type: object
+          additionalProperties: true
+        toneSettings:
+          type: object
+          additionalProperties: true
+    Draft:
+      type: object
+      properties:
+        id: { type: string }
+        templateId: { type: string }
+        title: { type: string }
+        data:
+          type: object
+          additionalProperties: true
+        toneSettings:
+          type: object
+          additionalProperties: true
+        previewText: { type: string }
+      required: [id, templateId, title]
+    DraftVersion:
+      type: object
+      properties:
+        id: { type: string }
+        draftId: { type: string }
+        versionNumber: { type: integer }
+        previewText: { type: string }
+        toneSettings:
+          type: object
+          additionalProperties: true
+      required: [id, draftId, versionNumber]
+    OutputRequest:
+      type: object
+      properties:
+        method:
+          type: string
+          enum: [print, pdf, copy, email]
+        destination:
+          type: string
+      required: [method]
+    OutputResponse:
+      type: object
+      properties:
+        id: { type: string }
+        status:
+          type: string
+          enum: [pending, success, failed]
+        method:
+          type: string
+          enum: [print, pdf, copy, email]
+        destination: { type: string }
+      required: [id, status, method]

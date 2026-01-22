@@ -31,7 +31,12 @@
 
 *GATE: Must pass before Phase 0 research. Re-check after Phase 1 design.*
 
-[Gates determined based on constitution file]
+- Elderly-first usability: large default text, clear labels, low cognitive load.
+- 2000s office-tool familiarity: wizard steps, menus/toolbars, explicit buttons.
+- Trust & safety: no “AI” branding, no hidden behavior, no fabricated facts,
+  clear privacy messaging.
+- Output reliability: every flow ends in Print/PDF/Copy/Email with confirmation.
+- Consistency: shared template structure, simple tone controls, preview + undo.
 
 ## Project Structure
 

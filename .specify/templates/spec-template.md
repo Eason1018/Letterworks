@@ -100,6 +100,23 @@
 - **[Entity 1]**: [What it represents, key attributes without implementation]
 - **[Entity 2]**: [What it represents, relationships to other entities]
 
+## Constitution Alignment *(mandatory)*
+
+<!--
+  ACTION REQUIRED: Provide explicit design/test evidence for each principle.
+  These bullets must be filled out in every spec.
+-->
+
+- **Elderly-first usability**: [how large text, clear labels, low cognitive load
+  are achieved]
+- **2000s office-tool familiarity**: [wizard steps, menus/toolbars, explicit
+  buttons]
+- **Trust & safety**: [no “AI” branding, no hidden behavior, no fabricated facts,
+  clear privacy messaging]
+- **Output reliability**: [flow ends in Print/PDF/Copy/Email; confirmation path]
+- **Consistency & previewability**: [shared template structure, simple tone
+  controls, preview + undo]
+
 ## Success Criteria *(mandatory)*
 
 <!--

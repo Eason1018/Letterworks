@@ -12,6 +12,15 @@ description: "Task list template for feature implementation"
 
 **Organization**: Tasks are grouped by user story to enable independent implementation and testing of each story.
 
+**Constitution Tasks (required)**: Include tasks that explicitly cover:
+- Elderly-first usability (large text defaults, clear labels, low cognitive load)
+- 2000s office-tool familiarity (wizard steps, menus/toolbars, explicit buttons)
+- Trust & safety (no “AI” branding, no hidden behavior, no fabricated facts,
+  clear privacy messaging)
+- Output reliability (Print/PDF/Copy/Email available at end of each flow)
+- Consistency & previewability (shared template structure, simple tone controls,
+  preview + undo)
+
 ## Format: `[ID] [P?] [Story] Description`
 
 - **[P]**: Can run in parallel (different files, no dependencies)
