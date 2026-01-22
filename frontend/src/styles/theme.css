@@ -1,0 +1,30 @@
+:root {:root {
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+}  color: var(--primary-contrast);  background: var(--primary);  border: 1px solid var(--border);  border-radius: 6px;  padding: 12px 20px;  font-size: 1rem;button {}  --surface: #ffffff;  --border: #d6d6d6;  --primary-contrast: #ffffff;  --primary: #1f4e79;  --primary: #1f4e79;
+  --primary-contrast: #ffffff;
+  --border: #d6d6d6;
+  --surface: #ffffff;
+}
+
+button {
+  font-size: 1rem;
+  padding: 12px 20px;
+  border-radius: 6px;
+  border: 1px solid var(--border);
+  background: var(--primary);
+  color: var(--primary-contrast);
+}

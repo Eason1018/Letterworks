@@ -22,12 +22,12 @@ description: "Task list for Letter Writing Wizard"
 
 **Purpose**: Project initialization and basic structure
 
-- [ ] T001 Create backend and frontend scaffolds in backend/package.json, backend/tsconfig.json, frontend/package.json, frontend/tsconfig.json, frontend/vite.config.ts
-- [ ] T002 [P] Configure frontend base typography and spacing in frontend/src/styles/base.css and frontend/src/styles/theme.css
-- [ ] T003 [P] Create Express app entry and health route in backend/src/index.ts
-- [ ] T004 [P] Configure Prisma datasource and generator in backend/prisma/schema.prisma
-- [ ] T005 [P] Add shared type definitions in backend/src/lib/types.ts
-- [ ] T006 [P] Create frontend app shell and routing in frontend/src/main.tsx and frontend/src/App.tsx
+- [x] T001 Create backend and frontend scaffolds in backend/package.json, backend/tsconfig.json, frontend/package.json, frontend/tsconfig.json, frontend/vite.config.ts
+- [x] T002 [P] Configure frontend base typography and spacing in frontend/src/styles/base.css and frontend/src/styles/theme.css
+- [x] T003 [P] Create Express app entry and health route in backend/src/index.ts
+- [x] T004 [P] Configure Prisma datasource and generator in backend/prisma/schema.prisma
+- [x] T005 [P] Add shared type definitions in backend/src/lib/types.ts
+- [x] T006 [P] Create frontend app shell and routing in frontend/src/main.tsx and frontend/src/App.tsx
 
 ---
 
@@ -37,13 +37,13 @@ description: "Task list for Letter Writing Wizard"
 
 **⚠️ CRITICAL**: No user story work can begin until this phase is complete
 
-- [ ] T007 Implement Prisma client setup in backend/src/lib/db.ts
-- [ ] T008 [P] Add seed templates and seed script in backend/src/lib/templateSeed.ts and backend/prisma/seed.ts
-- [ ] T009 Implement template service layer in backend/src/services/templateService.ts
-- [ ] T010 Implement base API router and error handling in backend/src/api/router.ts and backend/src/api/errors.ts
-- [ ] T011 [P] Build frontend API client wrapper in frontend/src/services/apiClient.ts
-- [ ] T012 [P] Build app shell components (menu + wizard shell) in frontend/src/components/MenuBar.tsx and frontend/src/components/WizardShell.tsx
-- [ ] T013 Implement accessibility defaults (large text, explicit buttons) in frontend/src/styles/accessibility.css and apply in frontend/src/App.tsx
+- [x] T007 Implement Prisma client setup in backend/src/lib/db.ts
+- [x] T008 [P] Add seed templates and seed script in backend/src/lib/templateSeed.ts and backend/prisma/seed.ts
+- [x] T009 Implement template service layer in backend/src/services/templateService.ts
+- [x] T010 Implement base API router and error handling in backend/src/api/router.ts and backend/src/api/errors.ts
+- [x] T011 [P] Build frontend API client wrapper in frontend/src/services/apiClient.ts
+- [x] T012 [P] Build app shell components (menu + wizard shell) in frontend/src/components/MenuBar.tsx and frontend/src/components/WizardShell.tsx
+- [x] T013 Implement accessibility defaults (large text, explicit buttons) in frontend/src/styles/accessibility.css and apply in frontend/src/App.tsx
 
 **Checkpoint**: Foundation ready - user story implementation can now begin in parallel
 
@@ -57,17 +57,17 @@ description: "Task list for Letter Writing Wizard"
 
 ### Implementation for User Story 1
 
-- [ ] T014 [P] [US1] Implement template endpoints in backend/src/api/templates.ts
-- [ ] T015 [P] [US1] Implement wizard session endpoints in backend/src/api/wizardSessions.ts
-- [ ] T016 [US1] Implement preview rendering in backend/src/services/previewService.ts
-- [ ] T017 [US1] Implement preview endpoint in backend/src/api/previews.ts
-- [ ] T018 [P] [US1] Build template library page in frontend/src/pages/TemplateLibraryPage.tsx
-- [ ] T019 [US1] Build wizard flow UI in frontend/src/pages/WizardPage.tsx and frontend/src/components/WizardStep.tsx
-- [ ] T020 [US1] Build preview panel in frontend/src/components/LetterPreview.tsx
-- [ ] T021 [US1] Implement output actions and confirmations in frontend/src/components/OutputActions.tsx and frontend/src/components/OutputConfirmDialog.tsx
-- [ ] T022 [US1] Implement output service and endpoint in backend/src/services/outputService.ts and backend/src/api/outputs.ts
-- [ ] T023 [US1] Implement draft creation for completed wizard in backend/src/services/draftService.ts and backend/src/api/drafts.ts
-- [ ] T024 [US1] Wire wizard completion to draft creation in frontend/src/services/draftsService.ts and frontend/src/pages/WizardPage.tsx
+- [x] T014 [P] [US1] Implement template endpoints in backend/src/api/templates.ts
+- [x] T015 [P] [US1] Implement wizard session endpoints in backend/src/api/wizardSessions.ts
+- [x] T016 [US1] Implement preview rendering in backend/src/services/previewService.ts
+- [x] T017 [US1] Implement preview endpoint in backend/src/api/previews.ts
+- [x] T018 [P] [US1] Build template library page in frontend/src/pages/TemplateLibraryPage.tsx
+- [x] T019 [US1] Build wizard flow UI in frontend/src/pages/WizardPage.tsx and frontend/src/components/WizardStep.tsx
+- [x] T020 [US1] Build preview panel in frontend/src/components/LetterPreview.tsx
+- [x] T021 [US1] Implement output actions and confirmations in frontend/src/components/OutputActions.tsx and frontend/src/components/OutputConfirmDialog.tsx
+- [x] T022 [US1] Implement output service and endpoint in backend/src/services/outputService.ts and backend/src/api/outputs.ts
+- [x] T023 [US1] Implement draft creation for completed wizard in backend/src/services/draftService.ts and backend/src/api/drafts.ts
+- [x] T024 [US1] Wire wizard completion to draft creation in frontend/src/services/draftsService.ts and frontend/src/pages/WizardPage.tsx
 
 **Checkpoint**: User Story 1 is fully functional and testable independently
 
@@ -81,11 +81,11 @@ description: "Task list for Letter Writing Wizard"
 
 ### Implementation for User Story 2
 
-- [ ] T025 [P] [US2] Implement deterministic tone rules in backend/src/services/toneService.ts
-- [ ] T026 [US2] Integrate tone rules into preview rendering in backend/src/services/previewService.ts
-- [ ] T027 [US2] Build tone control UI and undo in frontend/src/components/ToneControls.tsx and frontend/src/components/UndoButton.tsx
-- [ ] T028 [US2] Connect tone controls to preview API in frontend/src/services/previewService.ts and frontend/src/pages/WizardPage.tsx
-- [ ] T029 [US2] Add trust & safety messaging near controls in frontend/src/components/TrustSafetyNote.tsx
+- [x] T025 [P] [US2] Implement deterministic tone rules in backend/src/services/toneService.ts
+- [x] T026 [US2] Integrate tone rules into preview rendering in backend/src/services/previewService.ts
+- [x] T027 [US2] Build tone control UI and undo in frontend/src/components/ToneControls.tsx and frontend/src/components/UndoButton.tsx
+- [x] T028 [US2] Connect tone controls to preview API in frontend/src/services/previewService.ts and frontend/src/pages/WizardPage.tsx
+- [x] T029 [US2] Add trust & safety messaging near controls in frontend/src/components/TrustSafetyNote.tsx
 
 **Checkpoint**: User Story 2 is functional and testable independently
 
@@ -99,12 +99,12 @@ description: "Task list for Letter Writing Wizard"
 
 ### Implementation for User Story 3
 
-- [ ] T030 [P] [US3] Implement draft list/get/update endpoints in backend/src/api/drafts.ts and backend/src/services/draftService.ts
-- [ ] T031 [P] [US3] Implement version endpoints in backend/src/api/versions.ts and backend/src/services/versionService.ts
-- [ ] T032 [US3] Build drafts list page in frontend/src/pages/DraftsPage.tsx
-- [ ] T033 [US3] Build version history UI in frontend/src/components/VersionHistory.tsx
-- [ ] T034 [US3] Wire save version actions in frontend/src/services/draftsService.ts and frontend/src/components/OutputActions.tsx
-- [ ] T035 [US3] Implement resume-draft flow in frontend/src/pages/WizardPage.tsx and frontend/src/pages/DraftsPage.tsx
+- [x] T030 [P] [US3] Implement draft list/get/update endpoints in backend/src/api/drafts.ts and backend/src/services/draftService.ts
+- [x] T031 [P] [US3] Implement version endpoints in backend/src/api/versions.ts and backend/src/services/versionService.ts
+- [x] T032 [US3] Build drafts list page in frontend/src/pages/DraftsPage.tsx
+- [x] T033 [US3] Build version history UI in frontend/src/components/VersionHistory.tsx
+- [x] T034 [US3] Wire save version actions in frontend/src/services/draftsService.ts and frontend/src/components/OutputActions.tsx
+- [x] T035 [US3] Implement resume-draft flow in frontend/src/pages/WizardPage.tsx and frontend/src/pages/DraftsPage.tsx
 
 **Checkpoint**: User Story 3 is functional and testable independently
 
@@ -114,9 +114,9 @@ description: "Task list for Letter Writing Wizard"
 
 **Purpose**: Improvements that affect multiple user stories
 
-- [ ] T036 [P] Add help and instructional copy in frontend/src/content/helpText.ts
-- [ ] T037 Add empty/error states and accessibility fixes in frontend/src/components/EmptyState.tsx and frontend/src/styles/accessibility.css
-- [ ] T038 [P] Validate quickstart steps and update specs/001-letter-writing-wizard/quickstart.md
+- [x] T036 [P] Add help and instructional copy in frontend/src/content/helpText.ts
+- [x] T037 Add empty/error states and accessibility fixes in frontend/src/components/EmptyState.tsx and frontend/src/styles/accessibility.css
+- [x] T038 [P] Validate quickstart steps and update specs/001-letter-writing-wizard/quickstart.md
 
 ---
 

@@ -1,0 +1,128 @@
+.app-shell {.app-shell {
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+}  padding: 24px;  border-radius: 8px;  border: 1px solid var(--border);  background: var(--surface);.wizard-shell {}  text-decoration: underline;.menu-links a.active {}  margin-left: 16px;  text-decoration: none;  color: var(--primary-contrast);.menu-links a {}  color: var(--primary-contrast);  background: var(--primary);  padding: 16px 32px;  justify-content: space-between;  align-items: center;  display: flex;.menu-bar {}  min-height: 100vh;  flex-direction: column;  display: flex;  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.menu-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 32px;
+  background: var(--primary);
+  color: var(--primary-contrast);
+}
+
+.menu-links a {
+  color: var(--primary-contrast);
+  text-decoration: none;
+  margin-left: 16px;
+}
+
+.menu-links a.active {
+  text-decoration: underline;
+}
+
+.wizard-shell {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 24px;
+}
+
+.template-grid {
+  display: grid;
+  gap: 16px;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+}
+
+.template-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 16px;
+}
+
+.template-card a {
+  display: inline-block;
+  margin-top: 12px;
+  color: var(--primary);
+}
+
+.wizard-actions {
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end;
+  margin-top: 16px;
+  flex-wrap: wrap;
+}
+
+.drafts-grid {
+  display: grid;
+  gap: 16px;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+}
+
+.draft-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 16px;
+}
+
+.draft-actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 12px;
+  align-items: center;
+}
+
+.version-history ul {
+  list-style: none;
+  padding: 0;
+}
+
+.version-history li {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.empty-state {
+  padding: 24px;
+  border: 1px dashed var(--border);
+  border-radius: 8px;
+  background: #ffffff;
+}

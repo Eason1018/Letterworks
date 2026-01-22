@@ -17,6 +17,9 @@ provides a wizard, preview, tone controls, and output options.
 # Backend
 cd backend
 npm install
+npx prisma generate
+npx prisma migrate dev --name init
+npm run seed
 npm run dev
 
 # Frontend
