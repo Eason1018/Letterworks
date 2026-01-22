@@ -60,7 +60,7 @@ router.post("/:templateId/drafts/compose", async (req, res, next) => {
     if (!template) {
       throw new ApiError("Template not found", 404);
     }
-    const composition = composeDraft(template, input.facts, input.tone ?? "none");
+    const composition = await composeDraft(template, input.facts, input.tone ?? "none");
     res.json(composition);
   } catch (error) {
     next(error);

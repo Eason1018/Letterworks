@@ -2,6 +2,8 @@ import { Router } from "express";
 import { z } from "zod";
 import { prisma } from "../lib/db.js";
 import { renderPreview } from "../services/previewService.js";
+import { applyTone } from "../services/toneService.js";
+import { parseJson } from "../lib/json.js";
 import { ApiError } from "./errors.js";
 
 const router = Router();
@@ -31,11 +33,18 @@ router.post("/wizard-sessions/:sessionId", async (req, res, next) => {
       throw new ApiError("Template not found", 404);
     }
 
-    const previewText = renderPreview(
-      template,
-      session.data as Record<string, unknown>,
-      req.body?.tone ?? "none"
-    );
+    const sessionData = parseJson<Record<string, unknown>>(session.data, {});
+    const draftBody = typeof sessionData.draftBody === "string" ? sessionData.draftBody : "";
+    const subjectLine =
+      typeof sessionData.subjectLine === "string" ? sessionData.subjectLine : "";
+
+    const previewText = draftBody
+      ? applyTone(
+          subjectLine ? `Subject: ${subjectLine}\n\n${draftBody}` : draftBody,
+          req.body?.tone ?? "none",
+          template
+        )
+      : renderPreview(template, sessionData, req.body?.tone ?? "none");
     res.json({ previewText });
   } catch (error) {
     next(error);
@@ -61,11 +70,14 @@ router.post("/drafts/:draftId", async (req, res, next) => {
       throw new ApiError("Template not found", 404);
     }
 
-    const previewText = renderPreview(
-      template,
-      draft.data as Record<string, unknown>,
-      req.body?.tone ?? "none"
-    );
+    const basePreview = draft.previewText ?? "";
+    const previewText = basePreview
+      ? applyTone(basePreview, req.body?.tone ?? "none", template)
+      : renderPreview(
+          template,
+          parseJson<Record<string, unknown>>(draft.data, {}),
+          req.body?.tone ?? "none"
+        );
     res.json({ previewText });
   } catch (error) {
     next(error);

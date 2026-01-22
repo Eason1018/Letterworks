@@ -1,5 +1,6 @@
-import type { Template } from "../lib/types";
-import { applyTone, type ToneControl } from "./toneService";
+import type { Template } from "../lib/types.js";
+import { applyTone, type ToneControl } from "./toneService.js";
+import { generateDraftWithAI } from "./aiDraftService.js";
 
 export interface DraftComposition {
   subjectLine: string;
@@ -30,11 +31,11 @@ const buildSubjectLine = (template: Template, facts: Record<string, string>) => 
   return `Regarding: ${template.name}`;
 };
 
-export const composeDraft = (
+export const composeDraft = async (
   template: Template,
   facts: Record<string, string>,
   tone: ToneControl = "none"
-): DraftComposition => {
+): Promise<DraftComposition> => {
   const structure = template.structure;
   const subjectLine = buildSubjectLine(template, facts);
 
@@ -49,18 +50,21 @@ export const composeDraft = (
     applyTemplate(structure.signature, facts)
   ];
 
-  const bodyText = bodySections
+  const fallbackBody = bodySections
     .filter((line) => line !== undefined)
     .join("\n")
     .trim();
 
-  const tonedBody = applyTone(bodyText, tone, template);
-  const previewText = subjectLine
-    ? `Subject: ${subjectLine}\n\n${tonedBody}`.trim()
+  const aiResult = await generateDraftWithAI(template, facts);
+  const baseBody = aiResult?.body ?? fallbackBody;
+  const baseSubject = aiResult?.subjectLine ?? subjectLine;
+  const tonedBody = applyTone(baseBody, tone, template);
+  const previewText = baseSubject
+    ? `Subject: ${baseSubject}\n\n${tonedBody}`.trim()
     : tonedBody;
 
   return {
-    subjectLine,
+    subjectLine: baseSubject,
     body: tonedBody,
     previewText
   };
