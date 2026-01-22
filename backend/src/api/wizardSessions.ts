@@ -39,11 +39,26 @@ router.post("/", async (req, res, next) => {
 router.patch("/:sessionId", async (req, res, next) => {
   try {
     const input = updateSchema.parse(req.body);
+    const existing = await prisma.wizardSession.findUnique({
+      where: { id: req.params.sessionId }
+    });
+
+    if (!existing) {
+      throw new ApiError("Wizard session not found", 404);
+    }
+
+    const mergedData = input.data
+      ? {
+          ...parseJson(existing.data, {}),
+          ...input.data
+        }
+      : undefined;
+
     const session = await prisma.wizardSession.update({
       where: { id: req.params.sessionId },
       data: {
         ...(input.currentStep !== undefined ? { currentStep: input.currentStep } : {}),
-        ...(input.data ? { data: stringifyJson(input.data) } : {}),
+        ...(mergedData ? { data: stringifyJson(mergedData) } : {}),
         ...(input.status ? { status: input.status } : {})
       }
     });

@@ -18,17 +18,18 @@ const TemplateLibraryPage = () => {
     <main className="page">
       <h1>Choose a letter type</h1>
       <p>{helpText.welcome}</p>
-      {error && <p>{error}</p>}
-      {templates.length === 0 ? (
+      {error && <p style={{ color: 'red' }}>{error}</p>}
+      {templates.length === 0 && !error ? (
         <EmptyState
-          title="No templates yet"
-          description="Templates will appear here once loaded."
+          title="Loading templates..."
+          description="Please wait while we load the available templates."
         />
       ) : (
         <div className="template-grid">
           {templates.map((template) => (
             <div key={template.id} className="template-card">
               <h2>{template.name}</h2>
+              {template.category && <span className="category">{template.category}</span>}
               {template.description && <p>{template.description}</p>}
               <Link to={`/wizard?templateId=${template.id}`}>Start</Link>
             </div>

@@ -10,6 +10,7 @@ export interface TemplateField {
 export interface TemplateStructure {
   header: string;
   recipient: string;
+  subject?: string;
   body: string;
   closing: string;
   signature: string;

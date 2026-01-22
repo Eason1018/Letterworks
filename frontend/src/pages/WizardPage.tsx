@@ -8,7 +8,7 @@ import ToneControls from "../components/ToneControls";
 import TrustSafetyNote from "../components/TrustSafetyNote";
 import { getTemplate, type TemplateResponse } from "../services/templatesService";
 import { createWizardSession, updateWizardSession } from "../services/wizardService";
-import { fetchWizardPreviewWithTone, type ToneControl } from "../services/previewService";
+import { fetchWizardPreviewWithTone } from "../services/previewService";
 import {
   createDraft,
   createDraftVersion,
@@ -16,6 +16,8 @@ import {
   requestOutput,
   updateDraft
 } from "../services/draftsService";
+import { composeDraft } from "../services/apiClient";
+import type { ToneControl } from "../types";
 
 const WizardPage = () => {
   const [searchParams] = useSearchParams();
@@ -25,8 +27,13 @@ const WizardPage = () => {
 
   const [template, setTemplate] = useState<TemplateResponse | null>(null);
   const [sessionId, setSessionId] = useState<string | null>(null);
-  const [currentStep, setCurrentStep] = useState(0);
-  const [data, setData] = useState<Record<string, string>>({});
+  const [flowStep, setFlowStep] = useState(0);
+  const [fieldValues, setFieldValues] = useState<Record<string, string>>({});
+  const [facts, setFacts] = useState<Record<string, string>>({});
+  const [missingInfo, setMissingInfo] = useState<string[]>([]);
+  const [ambiguities, setAmbiguities] = useState<string[]>([]);
+  const [warnings, setWarnings] = useState<string[]>([]);
+  const [subjectLine, setSubjectLine] = useState<string>("");
   const [previewText, setPreviewText] = useState<string>("");
   const [previewHistory, setPreviewHistory] = useState<string[]>([]);
   const [draftId, setDraftId] = useState<string | null>(null);
@@ -34,6 +41,23 @@ const WizardPage = () => {
   const [outputMessage, setOutputMessage] = useState<string | null>(null);
 
   const requiredFields = useMemo(() => template?.requiredFields ?? [], [template]);
+  const allFields = useMemo(
+    () => [...requiredFields, ...(template?.optionalFields ?? [])],
+    [requiredFields, template]
+  );
+
+  const factItems = useMemo(
+    () =>
+      allFields
+        .filter((field) => facts[field.id])
+        .map((field) => ({
+          id: field.id,
+          label: field.label,
+          value: facts[field.id],
+          required: field.required
+        })),
+    [allFields, facts]
+  );
 
   useEffect(() => {
     const load = async () => {
@@ -42,19 +66,72 @@ const WizardPage = () => {
           const draft = await getDraft(draftIdParam);
           const templateResponse = await getTemplate(draft.templateId);
           setTemplate(templateResponse);
-          setData(draft.data as Record<string, string>);
           setDraftId(draft.id);
 
-          const firstMissingIndex = templateResponse.requiredFields.findIndex(
-            (field) => !(draft.data as Record<string, string>)[field.id]
+          const draftData = draft.data as Record<string, unknown>;
+          const extractedFacts =
+            (draftData.extractedFacts as Record<string, string> | undefined) ?? {};
+          const fallbackFacts: Record<string, string> = {};
+          for (const field of [...templateResponse.requiredFields, ...templateResponse.optionalFields]) {
+            const value = draftData[field.id];
+            if (typeof value === "string" && value.trim()) {
+              fallbackFacts[field.id] = value;
+            }
+          }
+
+          const resolvedFacts =
+            Object.keys(extractedFacts).length > 0 ? extractedFacts : fallbackFacts;
+
+          setFacts(resolvedFacts);
+          setFieldValues(() => {
+            const nextValues: Record<string, string> = {};
+            for (const field of templateResponse.requiredFields) {
+              const value = resolvedFacts[field.id];
+              if (value) {
+                nextValues[field.id] = value;
+              }
+            }
+            return nextValues;
+          });
+          setMissingInfo(
+            Array.isArray(draftData.missingInfo)
+              ? (draftData.missingInfo as string[])
+              : []
           );
-          setCurrentStep(firstMissingIndex === -1 ? 0 : firstMissingIndex);
+          setAmbiguities(
+            Array.isArray(draftData.ambiguities)
+              ? (draftData.ambiguities as string[])
+              : []
+          );
+          setWarnings(
+            Array.isArray(draftData.warnings) ? (draftData.warnings as string[]) : []
+          );
+          setSubjectLine(
+            typeof draftData.subjectLine === "string" ? draftData.subjectLine : ""
+          );
+          setFlowStep(1);
 
           const session = await createWizardSession(draft.templateId);
           setSessionId(session.id);
           await updateWizardSession(session.id, {
-            data: draft.data,
-            currentStep: 1,
+            data: {
+              extractedFacts: resolvedFacts,
+              missingInfo: Array.isArray(draftData.missingInfo)
+                ? (draftData.missingInfo as string[])
+                : [],
+              ambiguities: Array.isArray(draftData.ambiguities)
+                ? (draftData.ambiguities as string[])
+                : [],
+              warnings: Array.isArray(draftData.warnings)
+                ? (draftData.warnings as string[])
+                : [],
+              subjectLine:
+                typeof draftData.subjectLine === "string" ? draftData.subjectLine : "",
+              draftBody:
+                typeof draftData.draftBody === "string" ? draftData.draftBody : "",
+              ...resolvedFacts
+            },
+            currentStep: 2,
             status: "in_progress"
           });
 
@@ -81,62 +158,95 @@ const WizardPage = () => {
     load();
   }, [templateId, draftIdParam]);
 
-  const currentField = requiredFields[currentStep];
-  const isLastStep = currentStep >= requiredFields.length - 1;
+  const stepLabel = previewText
+    ? "Draft ready"
+    : `Step ${flowStep + 1} of 2`;
 
-  const handleNext = async () => {
-    if (!currentField) {
+  const handleGenerateFacts = async () => {
+    if (!template || !sessionId) {
       return;
     }
 
-    const value = data[currentField.id] ?? "";
-    if (currentField.required && value.trim() === "") {
-      setError("Please enter the required information before continuing.");
-      return;
+    const collectedFacts: Record<string, string> = {};
+    const missing: string[] = [];
+
+    for (const field of requiredFields) {
+      const value = fieldValues[field.id]?.trim() ?? "";
+      if (!value) {
+        missing.push(field.label);
+      } else {
+        collectedFacts[field.id] = value;
+      }
     }
 
-    setError(null);
-    const nextStep = Math.min(currentStep + 1, requiredFields.length - 1);
-
-    if (sessionId) {
-      await updateWizardSession(sessionId, {
-        currentStep: nextStep + 1,
-        data
-      });
-    }
-
-    if (isLastStep) {
-      await finishWizard();
+    if (missing.length > 0) {
+      setError("Please fill out all required fields before continuing.");
     } else {
-      setCurrentStep(nextStep);
+      setError(null);
     }
+
+    setFacts(collectedFacts);
+    setMissingInfo(missing);
+    setAmbiguities([]);
+    setWarnings([]);
+    setFlowStep(1);
+
+    await updateWizardSession(sessionId, {
+      currentStep: 2,
+      data: {
+        extractedFacts: collectedFacts,
+        missingInfo: missing,
+        ambiguities: [],
+        warnings: [],
+        ...collectedFacts
+      }
+    });
   };
 
-  const finishWizard = async () => {
-    if (!sessionId || !template) {
+  const handleComposeDraft = async () => {
+    if (!template || !sessionId) {
       return;
     }
+
+    const composition = await composeDraft(template.id, facts, "none");
+    setSubjectLine(composition.subjectLine);
+    setPreviewText(composition.previewText);
+    setPreviewHistory([composition.previewText]);
 
     await updateWizardSession(sessionId, {
       status: "completed",
-      data
+      data: {
+        extractedFacts: facts,
+        missingInfo,
+        ambiguities,
+        warnings,
+        subjectLine: composition.subjectLine,
+        draftBody: composition.body,
+        ...facts
+      }
     });
 
-    const preview = await fetchWizardPreviewWithTone(sessionId, "none");
-    setPreviewText(preview.previewText);
-    setPreviewHistory([preview.previewText]);
+    const draftData = {
+      ...facts,
+      extractedFacts: facts,
+      missingInfo,
+      ambiguities,
+      warnings,
+      subjectLine: composition.subjectLine,
+      draftBody: composition.body
+    };
 
     if (draftId) {
       await updateDraft(draftId, {
-        data,
-        previewText: preview.previewText
+        data: draftData,
+        previewText: composition.previewText
       });
     } else {
       const draft = await createDraft({
         templateId: template.id,
         title: `${template.name} - ${new Date().toLocaleDateString()}`,
-        data,
-        previewText: preview.previewText
+        data: draftData,
+        previewText: composition.previewText
       });
       setDraftId(draft.id);
     }
@@ -223,39 +333,58 @@ const WizardPage = () => {
     <main className="page">
       <WizardShell
         title={template.name}
-        stepLabel={`Step ${Math.min(currentStep + 1, requiredFields.length)} of ${
-          requiredFields.length
-        }`}
+        stepLabel={stepLabel}
       >
         {error && <p>{error}</p>}
-        {currentField && !previewText && (
+        {!previewText && flowStep === 0 && (
+          <div className="wizard-step-panel">
+            <h2>Required information</h2>
+            {requiredFields.map((field) => (
+              <WizardStep
+                key={field.id}
+                field={field}
+                value={fieldValues[field.id] ?? ""}
+                onChange={(value) =>
+                  setFieldValues((prev) => ({
+                    ...prev,
+                    [field.id]: value
+                  }))
+                }
+                compact
+              />
+            ))}
+          </div>
+        )}
+        {!previewText && flowStep === 1 && (
           <WizardStep
-            field={currentField}
-            value={data[currentField.id] ?? ""}
-            onChange={(value) =>
-              setData((prev) => ({
-                ...prev,
-                [currentField.id]: value
-              }))
-            }
+            facts={factItems}
+            missingInfo={missingInfo}
+            ambiguities={ambiguities}
+            warnings={warnings}
           />
         )}
         {!previewText && (
           <div className="wizard-actions">
             <button type="button" onClick={() => navigate("/templates")}>Cancel</button>
-            {currentStep > 0 && (
-              <button type="button" onClick={() => setCurrentStep((step) => step - 1)}>
+            {flowStep > 0 && (
+              <button type="button" onClick={() => setFlowStep((step) => step - 1)}>
                 Back
               </button>
             )}
-            <button type="button" onClick={handleNext}>
-              {isLastStep ? "Finish" : "Next"}
-            </button>
+            {flowStep === 0 ? (
+              <button type="button" onClick={handleGenerateFacts}>
+                Generate facts
+              </button>
+            ) : (
+              <button type="button" onClick={handleComposeDraft}>
+                Draft letter
+              </button>
+            )}
           </div>
         )}
         {previewText && (
           <>
-            <LetterPreview previewText={previewText} />
+            <LetterPreview previewText={previewText} subjectLine={subjectLine} />
             <ToneControls
               onToneChange={handleToneChange}
               onUndo={handleUndo}
@@ -280,6 +409,7 @@ const WizardPage = () => {
                 setPreviewText("");
                 setPreviewHistory([]);
                 setOutputMessage(null);
+                setFlowStep(1);
               }}
             >
               Edit details

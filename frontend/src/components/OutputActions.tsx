@@ -14,6 +14,7 @@ const OutputActions = ({ onOutput, onSaveVersion }: OutputActionsProps) => {
   return (
     <section className="output-actions">
       <h2>Finish</h2>
+      <p className="output-note">You can undo tone changes before choosing an output.</p>
       <div className="output-buttons">
         {(["print", "pdf", "copy", "email"] as const).map((method) => (
           <button key={method} type="button" onClick={() => setPendingMethod(method)}>

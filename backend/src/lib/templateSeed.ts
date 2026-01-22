@@ -22,14 +22,15 @@ export const templateSeed: Omit<Template, "createdAt" | "updatedAt">[] = [
     structure: {
       header: "{{date}}",
       recipient: "{{recipientName}}\n{{recipientAddress}}",
+      subject: "",
       body:
         "I am writing to request a refund for my purchase on {{purchaseDate}}. {{whatHappened}} I am requesting the following: {{requestedAction}}.",
       closing: "Thank you for your attention to this matter.",
       signature: "Sincerely,\n{{senderName}}\n{{senderAddress}}"
     },
     toneVariants: {
-      more_polite: { closing: "Thank you for your time and consideration." },
-      more_firm: { closing: "Please resolve this matter promptly." }
+      politer: { closing: "Thank you for your time and consideration." },
+      firmer: { closing: "Please resolve this matter promptly." }
     }
   },
   {
@@ -52,14 +53,15 @@ export const templateSeed: Omit<Template, "createdAt" | "updatedAt">[] = [
     structure: {
       header: "{{date}}",
       recipient: "{{recipientName}}",
+      subject: "",
       body:
         "I am writing to report an issue that began on {{issueDate}}. {{whatHappened}} I request the following: {{requestedAction}}.",
       closing: "Thank you for addressing this promptly.",
       signature: "Sincerely,\n{{senderName}}\n{{senderAddress}}"
     },
     toneVariants: {
-      more_polite: { closing: "Thank you for your help and attention." },
-      more_firm: { closing: "Please address this issue as soon as possible." }
+      politer: { closing: "Thank you for your help and attention." },
+      firmer: { closing: "Please address this issue as soon as possible." }
     }
   },
   {
@@ -82,14 +84,15 @@ export const templateSeed: Omit<Template, "createdAt" | "updatedAt">[] = [
     structure: {
       header: "{{date}}",
       recipient: "{{recipientName}}",
+      subject: "",
       body:
         "I am requesting copies of my medical records for the following date range: {{recordRange}}. My date of birth is {{dateOfBirth}}. Please provide: {{requestedAction}}.",
       closing: "Thank you for your assistance.",
       signature: "Sincerely,\n{{senderName}}\n{{senderAddress}}"
     },
     toneVariants: {
-      more_polite: { closing: "Thank you for your time and care." },
-      more_firm: { closing: "Please provide the records at your earliest convenience." }
+      politer: { closing: "Thank you for your time and care." },
+      firmer: { closing: "Please provide the records at your earliest convenience." }
     }
   },
   {
@@ -112,14 +115,15 @@ export const templateSeed: Omit<Template, "createdAt" | "updatedAt">[] = [
     structure: {
       header: "{{date}}",
       recipient: "{{recipientName}}",
+      subject: "",
       body:
         "I am writing to dispute a transaction dated {{transactionDate}} (Reference: {{referenceNumber}}). {{whatHappened}} I request: {{requestedAction}}.",
       closing: "Please investigate and respond at your earliest convenience.",
       signature: "Sincerely,\n{{senderName}}\n{{senderAddress}}"
     },
     toneVariants: {
-      more_polite: { closing: "Thank you for looking into this matter." },
-      more_firm: { closing: "Please resolve this dispute promptly." }
+      politer: { closing: "Thank you for looking into this matter." },
+      firmer: { closing: "Please resolve this dispute promptly." }
     }
   },
   {
@@ -142,14 +146,15 @@ export const templateSeed: Omit<Template, "createdAt" | "updatedAt">[] = [
     structure: {
       header: "{{date}}",
       recipient: "{{recipientName}}",
+      subject: "",
       body:
         "I am requesting repairs for an issue that began on {{issueDate}}. {{whatHappened}} I request: {{requestedAction}}.",
       closing: "Thank you for your prompt attention.",
       signature: "Sincerely,\n{{senderName}}\n{{senderAddress}}"
     },
     toneVariants: {
-      more_polite: { closing: "Thank you for your assistance." },
-      more_firm: { closing: "Please address this repair promptly." }
+      politer: { closing: "Thank you for your assistance." },
+      firmer: { closing: "Please address this repair promptly." }
     }
   },
   {
@@ -170,14 +175,15 @@ export const templateSeed: Omit<Template, "createdAt" | "updatedAt">[] = [
     structure: {
       header: "{{date}}",
       recipient: "{{recipientName}}",
+      subject: "",
       body:
         "Please accept this letter as formal notice of my resignation. My last day will be {{lastDay}}. {{whatHappened}}",
       closing: "Thank you for the opportunity.",
       signature: "Sincerely,\n{{senderName}}\n{{senderAddress}}"
     },
     toneVariants: {
-      more_polite: { closing: "Thank you for your support and guidance." },
-      more_firm: { closing: "Please consider this letter my formal notice." }
+      politer: { closing: "Thank you for your support and guidance." },
+      firmer: { closing: "Please consider this letter my formal notice." }
     }
   },
   {
@@ -197,14 +203,15 @@ export const templateSeed: Omit<Template, "createdAt" | "updatedAt">[] = [
     structure: {
       header: "{{date}}",
       recipient: "{{recipientName}}",
+      subject: "",
       body:
         "Thank you for {{whatHappened}}. I appreciate your time and support.",
       closing: "With gratitude,",
       signature: "Sincerely,\n{{senderName}}\n{{senderAddress}}"
     },
     toneVariants: {
-      more_polite: { closing: "With sincere appreciation," },
-      more_firm: { closing: "Thank you." }
+      politer: { closing: "With sincere appreciation," },
+      firmer: { closing: "Thank you." }
     }
   },
   {
@@ -224,14 +231,15 @@ export const templateSeed: Omit<Template, "createdAt" | "updatedAt">[] = [
     structure: {
       header: "{{date}}",
       recipient: "{{recipientName}}",
+      subject: "",
       body:
         "I am so sorry for your loss. {{whatHappened}} Please accept my heartfelt condolences.",
       closing: "With sympathy,",
       signature: "Sincerely,\n{{senderName}}\n{{senderAddress}}"
     },
     toneVariants: {
-      more_polite: { closing: "With my deepest sympathy," },
-      more_firm: { closing: "Please accept my condolences." }
+      politer: { closing: "With my deepest sympathy," },
+      firmer: { closing: "Please accept my condolences." }
     }
   }
 ];

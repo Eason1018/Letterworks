@@ -1,6 +1,5 @@
 import { apiClient } from "./apiClient";
-
-export type ToneControl = "more_polite" | "more_firm" | "make_shorter" | "fix_spelling" | "none";
+import type { ToneControl } from "../types";
 
 export const fetchWizardPreviewWithTone = (sessionId: string, tone: ToneControl) =>
   apiClient.post<{ previewText: string }, { tone: ToneControl }>(

@@ -1,0 +1,163 @@
+openapi: 3.0.3
+info:
+  title: LetterWorks Template AI Flow
+  version: 1.0.0
+servers:
+  - url: http://localhost:4000
+paths:
+  /api/templates/{templateId}/fact-extractions:
+    post:
+      summary: Extract structured facts and missing-info checklist from notes
+      parameters:
+        - in: path
+          name: templateId
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FactExtractionRequest'
+      responses:
+        '200':
+          description: Extracted facts and missing info
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FactExtractionResponse'
+  /api/templates/{templateId}/drafts/compose:
+    post:
+      summary: Compose subject line and draft body from extracted facts
+      parameters:
+        - in: path
+          name: templateId
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ComposeDraftRequest'
+      responses:
+        '200':
+          description: Draft subject and body
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ComposeDraftResponse'
+  /api/previews/wizard-sessions/{sessionId}:
+    post:
+      summary: Preview a wizard session draft with a tone edit
+      parameters:
+        - in: path
+          name: sessionId
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ToneRequest'
+      responses:
+        '200':
+          description: Preview text
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PreviewResponse'
+  /api/previews/drafts/{draftId}:
+    post:
+      summary: Preview a saved draft with a tone edit
+      parameters:
+        - in: path
+          name: draftId
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ToneRequest'
+      responses:
+        '200':
+          description: Preview text
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PreviewResponse'
+components:
+  schemas:
+    FactExtractionRequest:
+      type: object
+      required: [notes]
+      properties:
+        notes:
+          type: string
+          description: Freeform user notes
+    FactExtractionResponse:
+      type: object
+      required: [facts, missingInfo]
+      properties:
+        facts:
+          type: object
+          additionalProperties:
+            type: string
+        missingInfo:
+          type: array
+          items:
+            type: string
+        ambiguities:
+          type: array
+          items:
+            type: string
+        warnings:
+          type: array
+          items:
+            type: string
+    ComposeDraftRequest:
+      type: object
+      required: [facts]
+      properties:
+        facts:
+          type: object
+          additionalProperties:
+            type: string
+        tone:
+          $ref: '#/components/schemas/ToneControl'
+    ComposeDraftResponse:
+      type: object
+      required: [subjectLine, body, previewText]
+      properties:
+        subjectLine:
+          type: string
+        body:
+          type: string
+        previewText:
+          type: string
+    ToneRequest:
+      type: object
+      properties:
+        tone:
+          $ref: '#/components/schemas/ToneControl'
+    PreviewResponse:
+      type: object
+      properties:
+        previewText:
+          type: string
+    ToneControl:
+      type: string
+      enum:
+        - none
+        - politer
+        - firmer
+        - shorter
+        - timeline
+        - deadline

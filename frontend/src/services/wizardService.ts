@@ -1,10 +1,20 @@
 import { apiClient } from "./apiClient";
 
+export interface WizardSessionData {
+  rawNotes?: string;
+  extractedFacts?: Record<string, string>;
+  missingInfo?: string[];
+  ambiguities?: string[];
+  warnings?: string[];
+  subjectLine?: string;
+  draftBody?: string;
+}
+
 export interface WizardSession {
   id: string;
   templateId: string;
   currentStep: number;
-  data: Record<string, unknown>;
+  data: WizardSessionData;
   status: "in_progress" | "completed";
 }
 

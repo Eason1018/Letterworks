@@ -1,13 +1,15 @@
 import { Router } from "express";
 import { z } from "zod";
-import { prisma } from "../lib/db";
-import { renderPreview } from "../services/previewService";
-import { ApiError } from "./errors";
+import { prisma } from "../lib/db.js";
+import { renderPreview } from "../services/previewService.js";
+import { ApiError } from "./errors.js";
 
 const router = Router();
 
 const toneSchema = z.object({
-  tone: z.enum(["more_polite", "more_firm", "make_shorter", "fix_spelling", "none"]).optional()
+  tone: z
+    .enum(["politer", "firmer", "shorter", "timeline", "deadline", "none"])
+    .optional()
 });
 
 router.post("/wizard-sessions/:sessionId", async (req, res, next) => {

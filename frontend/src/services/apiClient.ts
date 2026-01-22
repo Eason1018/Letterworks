@@ -1,3 +1,5 @@
+import type { ComposeDraftResponse, FactExtractionResponse, ToneControl } from "../types";
+
 const API_BASE = "/api";
 
 export const apiClient = {
@@ -31,3 +33,19 @@ export const apiClient = {
     return response.json() as Promise<T>;
   }
 };
+
+export const extractFacts = (templateId: string, notes: string) =>
+  apiClient.post<FactExtractionResponse, { notes: string }>(
+    `/templates/${templateId}/fact-extractions`,
+    { notes }
+  );
+
+export const composeDraft = (
+  templateId: string,
+  facts: Record<string, string>,
+  tone?: ToneControl
+) =>
+  apiClient.post<ComposeDraftResponse, { facts: Record<string, string>; tone?: ToneControl }>(
+    `/templates/${templateId}/drafts/compose`,
+    { facts, tone }
+  );

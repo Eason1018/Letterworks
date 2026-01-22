@@ -1,20 +1,18 @@
-import type { Template } from "@prisma/client";
-import { parseJson } from "../lib/json";
+import { parseJson } from "../lib/json.js";
 
 export type ToneControl =
-  | "more_polite"
-  | "more_firm"
-  | "make_shorter"
-  | "fix_spelling"
+  | "politer"
+  | "firmer"
+  | "shorter"
+  | "timeline"
+  | "deadline"
   | "none";
 
-const applySpellingFixes = (text: string) => {
-  return text
-    .replace(/\bteh\b/gi, "the")
-    .replace(/\brecieve\b/gi, "receive")
-    .replace(/\badress\b/gi, "address")
-    .replace(/\bthier\b/gi, "their");
-};
+interface ToneTemplate {
+  toneVariants?: string | Record<string, unknown> | null;
+}
+
+const datePattern = /\b(\d{1,2}\/\d{1,2}\/\d{2,4}|\d{4}-\d{2}-\d{2}|jan|feb|mar|apr|may|jun|jul|aug|sep|sept|oct|nov|dec)\b/i;
 
 const shortenBody = (text: string) => {
   const paragraphs = text.split(/\n\s*\n/);
@@ -22,11 +20,13 @@ const shortenBody = (text: string) => {
     return text;
   }
 
-  const body = paragraphs[2];
+  const hasSubject = paragraphs[0]?.toLowerCase().startsWith("subject:");
+  const bodyIndex = hasSubject ? 2 : 1;
+  const body = paragraphs[bodyIndex] ?? "";
   const sentences = body.split(/(?<=[.!?])\s+/);
   const shortenedBody = sentences.slice(0, 1).join(" ");
   const updated = [...paragraphs];
-  updated[2] = shortenedBody;
+  updated[bodyIndex] = shortenedBody;
   return updated.join("\n\n");
 };
 
@@ -37,30 +37,51 @@ const applyClosingTone = (text: string, tone: ToneControl, override?: string) =>
   }
 
   const closingIndex = paragraphs.length - 2;
-  if (tone === "more_polite") {
+  if (tone === "politer") {
     paragraphs[closingIndex] =
       override ?? "Thank you for your time and consideration.";
   }
-  if (tone === "more_firm") {
+  if (tone === "firmer") {
     paragraphs[closingIndex] = override ?? "Please respond promptly.";
   }
   return paragraphs.join("\n\n");
 };
 
+const emphasizeTimeline = (text: string, label: "Timeline" | "Deadline") => {
+  const paragraphs = text.split(/\n\s*\n/);
+  const bodyIndex = paragraphs.length >= 4 ? (paragraphs[0]?.toLowerCase().startsWith("subject:") ? 2 : 1) : 0;
+  const body = paragraphs[bodyIndex] ?? "";
+  const sentences = body.split(/(?<=[.!?])\s+/);
+  const dateSentenceIndex = sentences.findIndex((sentence) => datePattern.test(sentence));
+  if (dateSentenceIndex === -1) {
+    return text;
+  }
+
+  const dateSentence = sentences[dateSentenceIndex];
+  const remaining = sentences.filter((_, index) => index !== dateSentenceIndex);
+  const updatedBody = [`${label}: ${dateSentence.trim()}`,
+    ...remaining.map((sentence) => sentence.trim()).filter(Boolean)
+  ].join(" ");
+
+  const updated = [...paragraphs];
+  updated[bodyIndex] = updatedBody;
+  return updated.join("\n\n");
+};
+
 export const applyTone = (
   previewText: string,
   tone: ToneControl,
-  template?: Template
+  template?: ToneTemplate
 ) => {
   if (tone === "none") {
     return previewText;
   }
 
-  if (tone === "more_polite" || tone === "more_firm") {
-    const variants = parseJson<Record<string, { closing?: string }>>(
-      template?.toneVariants as string,
-      {}
-    );
+  if (tone === "politer" || tone === "firmer") {
+    const variants =
+      typeof template?.toneVariants === "string"
+        ? parseJson<Record<string, { closing?: string }>>(template.toneVariants, {})
+        : ((template?.toneVariants ?? {}) as Record<string, { closing?: string }>);
     const variant = variants[tone];
     if (variant?.closing) {
       return applyClosingTone(previewText, tone, variant.closing);
@@ -68,12 +89,14 @@ export const applyTone = (
   }
 
   switch (tone) {
-    case "make_shorter":
+    case "shorter":
       return shortenBody(previewText);
-    case "fix_spelling":
-      return applySpellingFixes(previewText);
-    case "more_polite":
-    case "more_firm":
+    case "timeline":
+      return emphasizeTimeline(previewText, "Timeline");
+    case "deadline":
+      return emphasizeTimeline(previewText, "Deadline");
+    case "politer":
+    case "firmer":
       return applyClosingTone(previewText, tone);
     default:
       return previewText;

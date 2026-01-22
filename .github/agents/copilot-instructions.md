@@ -3,6 +3,7 @@
 Auto-generated from all feature plans. Last updated: 2026-01-22
 
 ## Active Technologies
+- SQLite (drafts, versions, templates) (001-template-ai-flow)
 
 - TypeScript (Node.js 20+, browser ES2022) + React, Vite, Express, Zod, Prisma (001-letter-writing-wizard)
 
@@ -23,6 +24,8 @@ npm test; npm run lint
 TypeScript (Node.js 20+, browser ES2022): Follow standard conventions
 
 ## Recent Changes
+- 001-template-ai-flow: Added TypeScript (Node.js 20+, browser ES2022) + React, Vite, Express, Zod, Prisma
+- 001-template-ai-flow: Added TypeScript (Node.js 20+, browser ES2022) + React, Vite, Express, Zod, Prisma
 
 - 001-letter-writing-wizard: Added TypeScript (Node.js 20+, browser ES2022) + React, Vite, Express, Zod, Prisma
 

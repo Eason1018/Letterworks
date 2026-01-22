@@ -20,6 +20,7 @@ const mapTemplate = (template: {
     structure: parseJson(template.structure, {
       header: "",
       recipient: "",
+      subject: "",
       body: "",
       closing: "",
       signature: ""
